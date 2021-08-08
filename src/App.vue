@@ -1,28 +1,56 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app" class="container">
+        <NewOrder />
+        <ProductCard
+            v-for="order in getLasCards"
+            :result="order"
+        />
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ProductCard from '/src/components/ProductCard'
+import NewOrder from "./components/NewOrder";
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+    name: 'App',
+    components: {
+        ProductCard,
+        NewOrder
+    },
+    data() {
+        return {}
+    },
+    methods: {
+        ...mapActions([
+            'getProducts',
+            'getStatuses',
+            'getOrders',
+        ])
+    },
+    computed: {
+        ...mapGetters([
+            'orderList'
+        ]),
+        getLasCards(){
+            return this.orderList.filter((el, index) => index > 360)
+        }
+    },
+    created() {
+        this.getProducts()
+        this.getStatuses()
+        this.getOrders()
+    }
 }
 </script>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped lang="scss">
+.container {
+    max-width: 80vw;
+    margin: 0 auto;
+    @media (max-width: 970px){
+        max-width: 95%;
+    }
 }
 </style>
